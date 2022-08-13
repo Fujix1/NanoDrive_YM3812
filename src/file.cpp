@@ -530,7 +530,7 @@ void vgmProcess() {
     byte command = get_vgm_ui8();
 
     switch (command) {
-      case 0xA0:  // AY8910, YM2203 PSG, YM2149, YMZ294D
+/*      case 0xA0:  // AY8910, YM2203 PSG, YM2149, YMZ294D
         dat = get_vgm_ui8();
         reg = get_vgm_ui8();
         FM.set_register(dat, reg, CS1);
@@ -563,6 +563,7 @@ void vgmProcess() {
         dat = get_vgm_ui8();
         FM.set_register(reg, dat, CS1);
         break;
+*/
       case 0x5A:  // YM3812
         reg = get_vgm_ui8();
         dat = get_vgm_ui8();
