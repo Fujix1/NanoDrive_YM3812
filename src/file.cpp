@@ -12,7 +12,7 @@
 #define BUFFERCAPACITY 2048  // VGMの読み込み単位（バイト）
 #define MAXLOOP 2            // 次の曲いくループ数
 #define SAMPLE_RATE 44100.0
-#define ONE_CYCLE 611u
+#define ONE_CYCLE 610u
 // 22.67573696145125 * 27 = 612.24  // 1000000 / SAMPLE_RATE
 
 boolean mount_is_ok = false;
@@ -146,9 +146,9 @@ boolean sd_init() {
       // フォルダノーマライズ
       // 以下の名前を含むファイルがあれば全部 att* dB 下げる
       attenuations[i] = 0;
-      fr = f_findfirst(&dir, &fno, dirs[i], "loud");
+      fr = f_findfirst(&dir, &fno, dirs[i], "att4");
       if (fr == FR_OK && fno.fname[0]) {
-        attenuations[i] = 8;
+        attenuations[i] = 4;
       }
       fr = f_findfirst(&dir, &fno, dirs[i], "att6");
       if (fr == FR_OK && fno.fname[0]) {
