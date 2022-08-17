@@ -128,7 +128,7 @@ void FMChip::set_register(byte addr, byte data, uint8_t chipno = CS0) {
       break;
   }*/
 
-  Tick.delay_us(20);
+  Tick.delay_us(16);
 }
 
 FMChip FM;
