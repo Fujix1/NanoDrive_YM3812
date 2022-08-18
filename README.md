@@ -2,7 +2,11 @@
 
 ![](https://github.com/Fujix1/NanoDrive_YM3812/workflows/Build/badge.svg)
 
-"Super Nano Stick for YM3812" is a VGM file player works with Longan Nano.
+NanoStick YM3812 はRISC-V マイコン「LonganNano」を使った小型のFM 音源VGM プレーヤーです。microSD カードに保存した.vgm フォーマットファイルを読み込み、逐次データFM 音源チップにを送信して再生します。可変周波数生成器の採用により、幅広い動作周波数に対応します。またI2C 制御のデジタルボリュームを使うことで、チップリセット時、曲切り替え時のノイズ抑制、指定ループ数経過後のフェードアウト機能などを実現しています。
+
+[マニュアルはこちら](https://github.com/Fujix1/NanoDrive_YM3812/blob/main/NanoStickYM3812.pdf)
+
+"Nano Stick YM3812" is a VGM file player works with Longan Nano.
 
 Except for a few parts, all parts are surface mounted to achive small package.
 
