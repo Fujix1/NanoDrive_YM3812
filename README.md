@@ -1,4 +1,7 @@
 # OPL2 (YM3812) VGM player
+
+![](https://github.com/Fujix1/NanoDrive_YM3812/workflows/Build/badge.svg)
+
 "Super Nano Stick for YM3812" is a VGM file player works with Longan Nano.
 
 Except for a few parts, all parts are surface mounted to achive small package.
