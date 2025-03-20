@@ -2,7 +2,7 @@
 
 ![](https://github.com/Fujix1/NanoDrive_YM3812/workflows/Build/badge.svg)
 
-NanoStick YM3812 はRISC-V マイコン「LonganNano」を使った小型のFM 音源VGM プレーヤーです。microSD カードに保存した.vgm フォーマットファイルを読み込み、逐次データFM 音源チップにを送信して再生します。可変周波数生成器の採用により、幅広い動作周波数に対応します。またI2C 制御のデジタルボリュームを使うことで、チップリセット時、曲切り替え時のノイズ抑制、指定ループ数経過後のフェードアウト機能などを実現しています。
+NanoStick YM3812 はRISC-V マイコン「LonganNano」を使った小型のFM 音源VGM プレーヤーです。microSD カードに保存した.vgm フォーマットファイルを読み込み、逐次データFM 音源チップにを送信して再生します。可変周波数生成器の採用により、幅広い動作周波数に対応します。またI2C 制御のデジタルボリュームを使うことで、チップリセット時、曲切り替え時のノイズ抑制、指定ループ数経過後のフェードアウト機能などを実現しています。OPL1とOPL2用の vgm を再生できます。
 
 [マニュアルはこちら](https://github.com/Fujix1/NanoDrive_YM3812/blob/main/NanoStickYM3812.pdf)
 
@@ -11,6 +11,10 @@ NanoStick YM3812 はRISC-V マイコン「LonganNano」を使った小型のFM �
 Except for a few parts, all parts are surface mounted to achive small package.
 
 ![FZ9QBWraMAY38FR](https://user-images.githubusercontent.com/13434151/184470049-42638414-974e-4dac-9a68-539ba6437c44.jpg)
+
+## コンパイル済み firmware / Precompiled firmware
+
+[firmware.zip](https://github.com/user-attachments/files/19357146/firmware.zip)
 
 
 ## Schematics and PCB
