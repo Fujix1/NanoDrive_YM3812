@@ -16,13 +16,13 @@
 // 22.67573696145125 * 27 = 612.24  // 1000000 / SAMPLE_RATE
 
 boolean mount_is_ok = false;
-uint8_t currentDir;                 // 今のディレクトリインデックス
-uint8_t currentFile;                // 今のファイルインデックス
-uint8_t numDirs = 0;                // ルートにあるディレクトリ数
-char **dirs;                        // ルートにあるディレクトリの配列
-uint8_t *attenuations;              // 各ディレクトリの減衰量 (デシベル)
-char ***files;                      // 各ディレクトリ内の vgm ファイル名配列
-uint8_t *numFiles;                  // 各ディレクトリ内の vgm ファイル数
+uint8_t currentDir;     // 今のディレクトリインデックス
+uint8_t currentFile;    // 今のファイルインデックス
+uint8_t numDirs = 0;    // ルートにあるディレクトリ数
+char **dirs;            // ルートにあるディレクトリの配列
+uint8_t *attenuations;  // 各ディレクトリの減衰量 (デシベル)
+char ***files;          // 各ディレクトリ内の vgm ファイル名配列
+uint8_t *numFiles;      // 各ディレクトリ内の vgm ファイル数
 
 boolean fileOpened = false;          // ファイル開いてるか
 uint8_t vgmBuffer1[BUFFERCAPACITY];  // バッファ
@@ -43,7 +43,6 @@ uint8_t vgmLoop = 0;        // 現在のループ回数
 uint64_t startTime;
 uint32_t duration;
 int32_t vgmDelay = 0;
-
 
 //---------------------------------------------------------------
 // Init and open SD card
@@ -80,8 +79,7 @@ boolean sd_init() {
     LCD_ShowString(0, 16, (u8 *)("ROOT"), CYAN);
 
     while (fr == FR_OK && fno.fname[0]) {  // 数える
-      if (!(fno.fattrib & AM_SYS) && !(fno.fattrib & AM_HID) &&
-          (fno.fattrib & AM_DIR)) {
+      if (!(fno.fattrib & AM_SYS) && !(fno.fattrib & AM_HID) && (fno.fattrib & AM_DIR)) {
         // システムじゃない && 隠しじゃない && ディレクトリ
         numDirs++;
       }
@@ -103,8 +101,7 @@ boolean sd_init() {
     n = 0;
     fr = f_findfirst(&dir, &fno, "", "*");
     while (fr == FR_OK && fno.fname[0]) {
-      if (!(fno.fattrib & AM_SYS) && !(fno.fattrib & AM_HID) &&
-          (fno.fattrib & AM_DIR)) {
+      if (!(fno.fattrib & AM_SYS) && !(fno.fattrib & AM_HID) && (fno.fattrib & AM_DIR)) {
         // システムじゃない && 隠しじゃない && ディレクトリ
         strcpy(dirs[n++], fno.fname);
         LCD_ShowString(0, 32, (u8 *)(dirs[n - 1]), CYAN);
@@ -269,8 +266,7 @@ uint32_t get_vgm_ui32_at(uint32_t pos) {
   f_read(&fil, buffer, 4, &br);
   f_lseek(&fil, currentPos);
 
-  return (uint32_t(buffer[0])) + (uint32_t(buffer[1]) << 8) +
-         (uint32_t(buffer[2]) << 16) + (uint32_t(buffer[3]) << 24);
+  return (uint32_t(buffer[0])) + (uint32_t(buffer[1]) << 8) + (uint32_t(buffer[2]) << 16) + (uint32_t(buffer[3]) << 24);
 }
 
 //----------------------------------------------------------------------
@@ -293,9 +289,8 @@ boolean openFile(char *path) {
 
   fr = f_open(&fil, path, FA_READ);
   if (fr == FR_OK) {
-    fr = f_stat(
-        path,
-        &fno);  // ファイルサイズ取得 ※外すと f_seek が正しく動かないので注意
+    fr = f_stat(path,
+                &fno);  // ファイルサイズ取得 ※外すと f_seek が正しく動かないので注意
     filesize = fno.fsize;
 
     fileOpened = true;
@@ -372,14 +367,11 @@ void vgmReady() {
 
   // Data offset
   // v1.50未満は 0x40、v1.50以降は 0x34 からの相対位置
-  uint32_t vgm_data_offset =
-      (vgm_version >= 0x150) ? get_vgm_ui32_at(0x34) + 0x34 : 0x40;
+  uint32_t vgm_data_offset = (vgm_version >= 0x150) ? get_vgm_ui32_at(0x34) + 0x34 : 0x40;
   f_lseek(&fil, vgm_data_offset);
 
   // Clock
-  uint32_t vgm_ay8910_clock = (vgm_version >= 0x151 && vgm_data_offset >= 0x78)
-                                  ? get_vgm_ui32_at(0x74)
-                                  : 0;
+  uint32_t vgm_ay8910_clock = (vgm_version >= 0x151 && vgm_data_offset >= 0x78) ? get_vgm_ui32_at(0x74) : 0;
   if (vgm_ay8910_clock) {
     switch (vgm_ay8910_clock) {
       case 1250000:  // 1.25MHz
@@ -480,7 +472,33 @@ void vgmReady() {
     }
   }
   */
- 
+  uint32_t vgm_ym3526_clock = get_vgm_ui32_at(0x54);
+  if (vgm_ym3526_clock) {
+    switch (vgm_ym3526_clock) {
+      case 3000000:  // 3MHz
+        SI5351.setFreq(SI5351_3000);
+        break;
+      case 3500000:  // 3.5MHz
+        SI5351.setFreq(SI5351_3500);
+        break;
+      case 3072000:  // 3.072MHz
+        SI5351.setFreq(SI5351_3072);
+        break;
+      case 3579580:  // 3.579MHz
+      case 3579545:
+        SI5351.setFreq(SI5351_3579);
+        break;
+      case 4000000:
+        SI5351.setFreq(SI5351_4000);
+        break;
+      case 4500000:  // 4.5MHz
+        SI5351.setFreq(SI5351_4500);
+        break;
+      default:
+        SI5351.setFreq(SI5351_3579);
+        break;
+    }
+  }
   uint32_t vgm_ym3812_clock = get_vgm_ui32_at(0x50);
   if (vgm_ym3812_clock) {
     switch (vgm_ym3812_clock) {
@@ -508,7 +526,7 @@ void vgmReady() {
         break;
     }
   }
- 
+
   // 初期バッファ補充
   fr = f_read(&fil, vgmBuffer1, BUFFERCAPACITY, &bufferSize);
   bufferPos = 0;
@@ -530,40 +548,43 @@ void vgmProcess() {
     byte command = get_vgm_ui8();
 
     switch (command) {
-/*      case 0xA0:  // AY8910, YM2203 PSG, YM2149, YMZ294D
-        dat = get_vgm_ui8();
-        reg = get_vgm_ui8();
-        FM.set_register(dat, reg, CS1);
-        vgmDelay -= 1;
-        break;
-      case 0x30:  // SN76489 CHIP 2
-        FM.write(get_vgm_ui8(), CS2);
+        /*
+        case 0xA0:  // AY8910, YM2203 PSG, YM2149, YMZ294D
+          dat = get_vgm_ui8();
+          reg = get_vgm_ui8();
+          FM.set_register(dat, reg, CS1);
+          vgmDelay -= 1;
+          break;
+        case 0x30:  // SN76489 CHIP 2
+          FM.write(get_vgm_ui8(), CS2);
 
-        // LCD_ShowString(0, 48, (u8 *)("SN76489 2"), GREEN);
-        break;
-      case 0x50:  // SN76489 CHIP 1
-        FM.write(get_vgm_ui8(), CS0);
+          // LCD_ShowString(0, 48, (u8 *)("SN76489 2"), GREEN);
+          break;
+        case 0x50:  // SN76489 CHIP 1
+          FM.write(get_vgm_ui8(), CS0);
 
-        // LCD_ShowString(0, 64, (u8 *)("SN76489 1"), GREEN);
-        break;
-      case 0x54:  // YM2151
-      case 0xa4:
-        reg = get_vgm_ui8();
-        dat = get_vgm_ui8();
-        FM.set_register(reg, dat, CS0);
-        vgmDelay -= 1;
-        break;
+          // LCD_ShowString(0, 64, (u8 *)("SN76489 1"), GREEN);
+          break;
+        case 0x54:  // YM2151
+        case 0xa4:
+          reg = get_vgm_ui8();
+          dat = get_vgm_ui8();
+          FM.set_register(reg, dat, CS0);
+          vgmDelay -= 1;
+          break;
+          */
       case 0x55:  // YM2203_0
         reg = get_vgm_ui8();
         dat = get_vgm_ui8();
-        FM.set_register(reg, dat, CS0);
+        // FM.set_register(reg, dat, CS0);
         break;
       case 0xA5:  // YM2203_1
         reg = get_vgm_ui8();
         dat = get_vgm_ui8();
-        FM.set_register(reg, dat, CS1);
+        // FM.set_register(reg, dat, CS1);
         break;
-*/
+
+      case 0x5B:  // YM3526
       case 0x5A:  // YM3812
         reg = get_vgm_ui8();
         dat = get_vgm_ui8();
@@ -597,10 +618,11 @@ void vgmProcess() {
             PT2257.start_fadeout();
           }
           f_lseek(&fil, vgmLoopOffset + 0x1C);  // ループする曲
-          bufferPos = 0;  // ループ開始位置からバッファを読む
+          bufferPos = 0;                        // ループ開始位置からバッファを読む
           f_read(&fil, vgmBuffer1, BUFFERCAPACITY, &bufferSize);
         }
         break;
+
       case 0x70:
       case 0x71:
       case 0x72:
@@ -686,6 +708,4 @@ void openDirectory(int count) {
   vgmOpen(currentDir, currentFile);
 }
 
-int mod(int i, int j) {
-  return (i % j) < 0 ? (i % j) + 0 + (j < 0 ? -j : j) : (i % j + 0);
-}
+int mod(int i, int j) { return (i % j) < 0 ? (i % j) + 0 + (j < 0 ? -j : j) : (i % j + 0); }
