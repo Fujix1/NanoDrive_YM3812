@@ -12,10 +12,14 @@ Except for a few parts, all parts are surface mounted to achive small package.
 
 ![FZ9QBWraMAY38FR](https://user-images.githubusercontent.com/13434151/184470049-42638414-974e-4dac-9a68-539ba6437c44.jpg)
 
-## コンパイル済み firmware / Precompiled firmware
+## コンパイル済みファームウェア / Precompiled firmware (2025/03/21)
 
-[firmware.zip](https://github.com/user-attachments/files/19357146/firmware.zip)
+[firmware.zip](https://github.com/user-attachments/files/19390264/firmware.zip)
 
+
+## Longan Nano 用ドライバとアップロードツールなど
+
+[https://dl.sipeed.com/shareURL/others/Longan_nano/Nano/Tools](https://dl.sipeed.com/shareURL/others/Longan_nano/Nano/Tools)
 
 ## Schematics and PCB
 ![LonganVGM](https://user-images.githubusercontent.com/13434151/184470098-795a471a-8cc7-4e27-9ea4-83d55a54b999.svg)
